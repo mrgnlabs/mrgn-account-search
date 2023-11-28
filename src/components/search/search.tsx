@@ -111,7 +111,7 @@ export const Search = () => {
   return (
     <div className="w-full max-w-4xl">
       <form className="w-full max-w-2xl mx-auto mb-4" onSubmit={searchAccounts}>
-        <div className="flex items-center justify-center w-full gap-2">
+        <div className="flex flex-col md:flex-row items-center justify-center w-full gap-2">
           <Input
             type="text"
             name="address"
@@ -121,7 +121,7 @@ export const Search = () => {
           />
           <Button
             type="submit"
-            className="py-2.5 h-auto w-[200px]"
+            className="py-2.5 h-auto w-full md:w-[200px]"
             disabled={isSearching}
           >
             {!isSearching && <>🔎 Search</>}
@@ -143,13 +143,14 @@ export const Search = () => {
                 index < account.balances.lending.length - 1
               )}
             >
-              <h3 className="text-lg font-medium mb-8 text-center">
-                Account: <span className="font-mono">{account.address}</span>
+              <h3 className="md:text-lg font-medium mb-8 text-center">
+                Account:{' '}
+                <span className="font-mono text-xs">{account.address}</span>
               </h3>
 
-              <div className="flex gap-4 justify-center">
+              <div className="flex flex-col md:flex-row gap-8 md:gap-4 justify-center">
                 <div className="w-full">
-                  <h4 className="text-lg font-medium mb-4">Lending</h4>
+                  <h4 className="md:text-lg font-medium mb-4">Lending</h4>
                   <div className="space-y-4">
                     {account.balances.lending.length === 0 && (
                       <p className="text-destructive-foreground">
