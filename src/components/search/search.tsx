@@ -45,6 +45,7 @@ type Account = {
 export const Search = () => {
   const [accounts, setAccounts] = React.useState<Account[]>()
   const [isSearching, setIsSearching] = React.useState(false)
+  const [errorMsg, setErrorMsg] = React.useState<string>('')
 
   const usDollarFormatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -54,7 +55,9 @@ export const Search = () => {
   const searchAccounts = React.useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()
+      setErrorMsg('')
       setIsSearching(true)
+      setAccounts([])
       const formData = new FormData(e.currentTarget)
       const address = formData.get('address')
 
@@ -77,14 +80,16 @@ export const Search = () => {
 
           pk = registry.owner
         } catch (e) {
-          console.log('Invalid domain name provided')
+          setErrorMsg('Invalid domain name provided')
           return
         }
       } else {
         try {
           pk = new PublicKey(addressString)
         } catch (e) {
-          console.log('Invalid address provided')
+          setErrorMsg('Invalid address provided')
+          setIsSearching(false)
+          setAccounts([])
           return
         }
       }
@@ -96,19 +101,24 @@ export const Search = () => {
       })
 
       if (!res.ok) {
-        console.log('Error searching for account')
+        setErrorMsg('Error searching for account')
+        setIsSearching(false)
+        setAccounts([])
         return
       }
 
       const { accounts } = await res.json()
 
       if (!accounts) {
-        console.log('No accounts found')
+        setErrorMsg('No accounts found')
+        setIsSearching(false)
+        setAccounts([])
         return
       }
 
-      setAccounts(accounts)
+      setErrorMsg('')
       setIsSearching(false)
+      setAccounts(accounts)
     },
     []
   )
@@ -134,7 +144,12 @@ export const Search = () => {
           </Button>
         </div>
       </form>
-      {accounts && (
+      {errorMsg && (
+        <p className="text-destructive py-1.5 px-2.5 rounded-lg text-center text-sm">
+          {errorMsg}
+        </p>
+      )}
+      {accounts && accounts.length > 0 && (
         <div>
           <p className="text-center italic text-sm mb-4">
             {accounts.length} account{accounts.length > 1 && 's'} found
