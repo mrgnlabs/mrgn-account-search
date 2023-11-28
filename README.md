@@ -1,4 +1,4 @@
-# mrgn account search
+# Example - mrgn / nextjs
 
 An example NextJS application using the marginfi-client-v2 ask.
 
