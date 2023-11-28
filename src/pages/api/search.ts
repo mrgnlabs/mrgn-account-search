@@ -33,6 +33,11 @@ export default async function handler(
     connection
   )
 
+  const tokenMetadata = await fetch(
+    'https://storage.googleapis.com/mrgn-public/mrgn-token-metadata-cache.json'
+  )
+  const tokenMetadataJson = await tokenMetadata.json()
+
   const accountsRaw = await marginfiClient.getMarginfiAccountsForAuthority(pk)
 
   const accounts = accountsRaw.map((account) => {
@@ -53,8 +58,37 @@ export default async function handler(
         balance.bankPk.toBase58()
       )
 
+      const tokenMetadata = tokenMetadataJson.find(
+        (token: { address: string }) => token.address === bank.mint.toBase58()
+      )
+
+      const { assets, liabilities } = balance.computeQuantityUi(bank)
+      const assetsUsd = bank.computeAssetUsdValue(
+        priceInfo!,
+        balance.assetShares,
+        2,
+        0
+      )
+      const liabilitiesUsd = bank.computeLiabilityUsdValue(
+        priceInfo!,
+        balance.liabilityShares,
+        2,
+        0
+      )
+
       return {
-        address: balance.bankPk.toBase58(),
+        bankAddress: bank.address.toBase58(),
+        mintAddress: bank.mint.toBase58(),
+        name: tokenMetadata?.name,
+        logo: tokenMetadata?.logoURI,
+        assets: {
+          quantity: !assetsUsd.isZero() ? assets.toNumber() : 0,
+          usd: assetsUsd.toNumber(),
+        },
+        liabilities: {
+          quantity: !liabilitiesUsd.isZero() ? liabilities.toNumber() : 0,
+          usd: liabilitiesUsd.toNumber(),
+        },
       }
     })
 
