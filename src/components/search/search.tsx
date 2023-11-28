@@ -150,7 +150,9 @@ export const Search = () => {
             >
               <h3 className="md:text-lg font-medium mb-8 text-center">
                 Account:{' '}
-                <span className="font-mono text-xs">{account.address}</span>
+                <span className="font-mono text-xs md:text-base">
+                  {account.address}
+                </span>
               </h3>
 
               <div className="flex flex-col md:flex-row gap-8 md:gap-4 justify-center">
