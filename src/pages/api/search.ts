@@ -93,12 +93,22 @@ export default async function handler(
       }
     })
 
+    const lendingPositions = balances.filter(
+      (balance) => balance.assets.quantity > 0
+    )
+    const borrowingPositions = balances.filter(
+      (balance) => balance.liabilities.quantity > 0
+    )
+
     return {
       assets: assets.toNumber(),
       liabilities: liabilities.toNumber(),
       address: account.address.toBase58(),
       healthFactor: parseFloat((healthFactor * 100).toFixed(2)),
-      balances,
+      balances: {
+        lending: lendingPositions,
+        borrowing: borrowingPositions,
+      },
     }
   })
 

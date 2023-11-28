@@ -7,6 +7,8 @@ import Image from 'next/image'
 import { Connection, PublicKey } from '@solana/web3.js'
 import { getDomainKeySync, NameRegistryState } from '@bonfida/spl-name-service'
 
+import { cn } from '@/lib/utils'
+
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 
@@ -33,7 +35,10 @@ type Account = {
   liabilities: number
   address: string
   healthFactor: number
-  balances: Balance[]
+  balances: {
+    lending: Balance[]
+    borrowing: Balance[]
+  }
 }
 
 export const Search = () => {
@@ -116,57 +121,90 @@ export const Search = () => {
       </form>
       {accounts && (
         <div>
-          <h2 className="text-2xl font-bold mb-4">
+          <h2 className="text-2xl font-bold mb-8">
             {accounts.length} account{accounts.length > 1 && 's'} found
           </h2>
 
-          {accounts.map((account) => (
-            <div className="border-b border-border pb-4 mb-4">
-              <h3 className="text-xl font-medium mb-2">
+          {accounts.map((account, index) => (
+            <div
+              key={index}
+              className={cn(
+                'border-border pb-4 mb-4',
+                index < account.balances.lending.length - 1
+              )}
+            >
+              <h3 className="text-xl font-medium mb-8">
                 Account: <span className="font-mono">{account.address}</span>
               </h3>
-              <h4 className="text-lg font-medium mb-4">Balances</h4>
-              <ul>
-                {account.balances.map((balance) => (
-                  <li>
-                    <h4 className="flex items-center gap-2">
-                      <Image
-                        src={balance.logo}
-                        alt={balance.name}
-                        width={30}
-                        height={30}
-                        unoptimized
-                        className="rounded-full"
-                      />
-                      {balance.name}
-                    </h4>
 
-                    {balance.assets.quantity > 0 && (
-                      <>
-                        <h5>Lending</h5>
-                        <ul className="text-sm font-mono">
+              <div className="flex gap-4 justify-center">
+                <div className="w-full">
+                  <h4 className="text-lg font-medium mb-4">Lending</h4>
+                  <ul>
+                    {account.balances.lending.map((balance, index) => (
+                      <li
+                        key={index}
+                        className={cn(
+                          'border-border pb-4 mb-4',
+                          index < account.balances.lending.length - 1
+                        )}
+                      >
+                        <h4 className="flex items-center gap-2 mb-2">
+                          <Image
+                            src={balance.logo}
+                            alt={balance.name}
+                            width={30}
+                            height={30}
+                            unoptimized
+                            className="rounded-full"
+                          />
+                          {balance.name}
+                        </h4>
+
+                        <ul className="text-sm font-mono space-y-1">
                           <li>
                             {balance.assets.quantity} {balance.symbol}
                           </li>
                           <li>{balance.assets.usd}</li>
                         </ul>
-                      </>
-                    )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="w-full">
+                  <h4 className="text-lg font-medium mb-4">Borrowing</h4>
+                  <ul>
+                    {account.balances.borrowing.map((balance, index) => (
+                      <li
+                        key={index}
+                        className={cn(
+                          'border-border pb-4 mb-4',
+                          index < account.balances.lending.length - 1
+                        )}
+                      >
+                        <h4 className="flex items-center gap-2 mb-2">
+                          <Image
+                            src={balance.logo}
+                            alt={balance.name}
+                            width={30}
+                            height={30}
+                            unoptimized
+                            className="rounded-full"
+                          />
+                          {balance.name}
+                        </h4>
 
-                    {balance.liabilities.quantity > 0 && (
-                      <>
-                        <h5>Borrowing</h5>
-                        <ul className="text-sm font-mono">
+                        <ul className="text-sm font-mono space-y-1">
                           <li>
                             {balance.liabilities.quantity} {balance.symbol}
                           </li>
                           <li>${balance.liabilities.usd}</li>
                         </ul>
-                      </>
-                    )}
-                  </li>
-                ))}
-              </ul>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
             </div>
           ))}
         </div>
