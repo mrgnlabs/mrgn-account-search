@@ -80,6 +80,7 @@ export default async function handler(
         bankAddress: bank.address.toBase58(),
         mintAddress: bank.mint.toBase58(),
         name: tokenMetadata?.name,
+        symbol: tokenMetadata?.symbol,
         logo: tokenMetadata?.logoURI,
         assets: {
           quantity: !assetsUsd.isZero() ? assets.toNumber() : 0,
