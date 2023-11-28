@@ -11,6 +11,7 @@ import { cn } from '@/lib/utils'
 
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import { Card, CardTitle, CardContent } from '@/components/ui/card'
 
 const connection = new Connection(process.env.NEXT_PUBLIC_RPC_URL!, 'confirmed')
 
@@ -43,10 +44,12 @@ type Account = {
 
 export const Search = () => {
   const [accounts, setAccounts] = React.useState<Account[]>()
+  const [isSearching, setIsSearching] = React.useState(false)
 
   const searchAccounts = React.useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()
+      setIsSearching(true)
       const formData = new FormData(e.currentTarget)
       const address = formData.get('address')
 
@@ -100,109 +103,116 @@ export const Search = () => {
       }
 
       setAccounts(accounts)
+      setIsSearching(false)
     },
     []
   )
 
   return (
-    <div className="w-full space-y-8 max-w-2xl">
-      <form className="w-full max-w-lg mx-auto" onSubmit={searchAccounts}>
+    <div className="w-full max-w-4xl">
+      <form className="w-full max-w-2xl mx-auto mb-4" onSubmit={searchAccounts}>
         <div className="flex items-center justify-center w-full gap-2">
           <Input
             type="text"
             name="address"
             placeholder="Wallet address or .sol domain..."
             className="text-lg h-auto py-1.5 font-light"
+            autoFocus
           />
-          <Button type="submit" className="py-3.5">
-            🔎 Search
+          <Button
+            type="submit"
+            className="py-2.5 h-auto w-[200px]"
+            disabled={isSearching}
+          >
+            {!isSearching && <>🔎 Search</>}
+            {isSearching && <>🔎 Searching...</>}
           </Button>
         </div>
       </form>
       {accounts && (
         <div>
-          <h2 className="text-2xl font-bold mb-8">
+          <p className="text-center italic text-sm mb-4">
             {accounts.length} account{accounts.length > 1 && 's'} found
-          </h2>
+          </p>
 
           {accounts.map((account, index) => (
             <div
               key={index}
               className={cn(
-                'border-border pb-4 mb-4',
+                'border-border pb-4 mb-4 mt-8',
                 index < account.balances.lending.length - 1
               )}
             >
-              <h3 className="text-xl font-medium mb-8">
+              <h3 className="text-lg font-medium mb-8 text-center">
                 Account: <span className="font-mono">{account.address}</span>
               </h3>
 
               <div className="flex gap-4 justify-center">
                 <div className="w-full">
                   <h4 className="text-lg font-medium mb-4">Lending</h4>
-                  <ul>
+                  <div className="space-y-4">
+                    {account.balances.lending.length === 0 && (
+                      <p className="text-destructive-foreground">
+                        No open lending positions
+                      </p>
+                    )}
                     {account.balances.lending.map((balance, index) => (
-                      <li
-                        key={index}
-                        className={cn(
-                          'border-border pb-4 mb-4',
-                          index < account.balances.lending.length - 1
-                        )}
-                      >
-                        <h4 className="flex items-center gap-2 mb-2">
-                          <Image
-                            src={balance.logo}
-                            alt={balance.name}
-                            width={30}
-                            height={30}
-                            unoptimized
-                            className="rounded-full"
-                          />
-                          {balance.name}
-                        </h4>
-
-                        <ul className="text-sm font-mono space-y-1">
-                          <li>
-                            {balance.assets.quantity} {balance.symbol}
-                          </li>
-                          <li>{balance.assets.usd}</li>
-                        </ul>
-                      </li>
+                      <Card key={index}>
+                        <CardContent>
+                          <h5 className="flex items-center gap-2 py-4 mb-4">
+                            <Image
+                              src={balance.logo}
+                              alt={balance.name}
+                              width={30}
+                              height={30}
+                              unoptimized
+                              className="rounded-full"
+                            />
+                            {balance.name}
+                          </h5>
+                          <ul className="text-sm font-mono space-y-1">
+                            <li>
+                              {balance.assets.quantity} {balance.symbol}
+                            </li>
+                            <li>{balance.assets.usd}</li>
+                          </ul>
+                        </CardContent>
+                      </Card>
                     ))}
-                  </ul>
+                  </div>
                 </div>
                 <div className="w-full">
                   <h4 className="text-lg font-medium mb-4">Borrowing</h4>
-                  <ul>
+                  <div className="space-y-4">
+                    {account.balances.borrowing.length === 0 && (
+                      <p className="text-destructive-foreground">
+                        No open borrowing positions
+                      </p>
+                    )}
                     {account.balances.borrowing.map((balance, index) => (
-                      <li
-                        key={index}
-                        className={cn(
-                          'border-border pb-4 mb-4',
-                          index < account.balances.lending.length - 1
-                        )}
-                      >
-                        <h4 className="flex items-center gap-2 mb-2">
-                          <Image
-                            src={balance.logo}
-                            alt={balance.name}
-                            width={30}
-                            height={30}
-                            unoptimized
-                            className="rounded-full"
-                          />
-                          {balance.name}
-                        </h4>
-
-                        <ul className="text-sm font-mono space-y-1">
-                          <li>
-                            {balance.liabilities.quantity} {balance.symbol}
-                          </li>
-                          <li>${balance.liabilities.usd}</li>
-                        </ul>
-                      </li>
+                      <Card key={index}>
+                        <CardContent>
+                          <h5 className="flex items-center gap-2 py-4 mb-4">
+                            <Image
+                              src={balance.logo}
+                              alt={balance.name}
+                              width={30}
+                              height={30}
+                              unoptimized
+                              className="rounded-full"
+                            />
+                            {balance.name}
+                          </h5>
+                          <ul className="text-sm font-mono space-y-1">
+                            <li>
+                              {balance.liabilities.quantity} {balance.symbol}
+                            </li>
+                            <li>${balance.liabilities.usd}</li>
+                          </ul>
+                        </CardContent>
+                      </Card>
                     ))}
-                  </ul>
+                  </div>
                 </div>
               </div>
             </div>
