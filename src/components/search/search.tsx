@@ -46,6 +46,11 @@ export const Search = () => {
   const [accounts, setAccounts] = React.useState<Account[]>()
   const [isSearching, setIsSearching] = React.useState(false)
 
+  const usDollarFormatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  })
+
   const searchAccounts = React.useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()
@@ -175,7 +180,11 @@ export const Search = () => {
                             <li>
                               {balance.assets.quantity} {balance.symbol}
                             </li>
-                            <li>{balance.assets.usd}</li>
+                            <li>
+                              {balance.assets.usd < 0.01
+                                ? `$${balance.assets.usd}`
+                                : usDollarFormatter.format(balance.assets.usd)}
+                            </li>
                           </ul>
                         </CardContent>
                       </Card>
@@ -208,7 +217,13 @@ export const Search = () => {
                             <li>
                               {balance.liabilities.quantity} {balance.symbol}
                             </li>
-                            <li>${balance.liabilities.usd}</li>
+                            <li>
+                              {balance.liabilities.usd < 0.01
+                                ? `$${balance.liabilities.usd}`
+                                : usDollarFormatter.format(
+                                    balance.liabilities.usd
+                                  )}
+                            </li>
                           </ul>
                         </CardContent>
                       </Card>
