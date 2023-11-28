@@ -1,4 +1,4 @@
-import { SearchForm } from '@/components/searchForm'
+import { Search } from '@/components/search'
 
 export default function Home() {
   return (
@@ -8,7 +8,7 @@ export default function Home() {
         <h2 className="text-2xl font-bold">mrgn account search</h2>
       </header>
       <div className="flex flex-col items-center">
-        <SearchForm />
+        <Search />
       </div>
     </main>
   )

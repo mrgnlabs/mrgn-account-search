@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button'
 
 const connection = new Connection(process.env.NEXT_PUBLIC_RPC_URL!, 'confirmed')
 
-export const SearchForm = () => {
+export const Search = () => {
   const [result, setResult] = React.useState('')
 
   const searchAccounts = React.useCallback(
@@ -64,14 +64,14 @@ export const SearchForm = () => {
         return
       }
 
-      const resJson = await res.json()
+      const { accounts } = await res.json()
 
-      if (!resJson.data) {
+      if (!accounts) {
         console.log('No accounts found')
         return
       }
 
-      setResult(resJson.data)
+      console.log(accounts)
     },
     []
   )

@@ -6,7 +6,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  // Get prod connection
   const connection = new Connection(
     'https://mrgn.rpcpool.com/c293bade994b3864b52c6bbbba4b',
     'confirmed'
@@ -28,18 +27,45 @@ export default async function handler(
   const config = await getConfig('production')
   let data = ''
 
-  // Instantiate client using those configs, and a fake wallet since we won't be signing anything
   const marginfiClient = await MarginfiClient.fetch(
     config,
     {} as any,
     connection
   )
 
-  const accounts = await marginfiClient.getMarginfiAccountsForAuthority(pk)
+  const accountsRaw = await marginfiClient.getMarginfiAccountsForAuthority(pk)
 
-  accounts.forEach((account) => {
-    data += account.describe() + '\r\n'
+  const accounts = accountsRaw.map((account) => {
+    const { assets, liabilities } = account.computeHealthComponents(2)
+    const maintenanceComponentsWithBiasAndWeighted =
+      account.computeHealthComponents(1)
+    const healthFactor =
+      maintenanceComponentsWithBiasAndWeighted.assets.isZero()
+        ? 1
+        : maintenanceComponentsWithBiasAndWeighted.assets
+            .minus(maintenanceComponentsWithBiasAndWeighted.liabilities)
+            .dividedBy(maintenanceComponentsWithBiasAndWeighted.assets)
+            .toNumber()
+
+    const balances = account.activeBalances.map((balance) => {
+      const bank = marginfiClient.banks.get(balance.bankPk.toBase58())!
+      const priceInfo = marginfiClient.oraclePrices.get(
+        balance.bankPk.toBase58()
+      )
+
+      return {
+        address: balance.bankPk.toBase58(),
+      }
+    })
+
+    return {
+      assets: assets.toNumber(),
+      liabilities: liabilities.toNumber(),
+      address: account.address.toBase58(),
+      healthFactor: parseFloat((healthFactor * 100).toFixed(2)),
+      balances,
+    }
   })
 
-  return res.json({ data })
+  return res.json({ accounts })
 }
