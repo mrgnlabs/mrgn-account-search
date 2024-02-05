@@ -1,12 +1,17 @@
-# Example - mrgn / nextjs
+# mrgn account search
 
-An example NextJS application using the marginfi-client-v2 ask.
+A NextJS application to quickly lookup a mrgn account.
+
+![Screenshot](./assets/screenshot.png)
 
 ## Getting Started
 
 Install dependencies and run development server:
 
 ```bash
+cp .env.sample .env
+# configure env variables
+
 yarn i
 yarn dev
 ```
