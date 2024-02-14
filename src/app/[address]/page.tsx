@@ -1,11 +1,11 @@
-import { Search } from "@/components/search";
+import { Search } from '@/components/search'
 
 export default function AddressPage({
   params,
 }: {
-  params: { address: string };
+  params: { address: string }
 }) {
-  const { address } = params;
+  const { address } = params
 
   return (
     <main className="container pb-8">
@@ -17,5 +17,5 @@ export default function AddressPage({
         <Search address={address} />
       </div>
     </main>
-  );
+  )
 }

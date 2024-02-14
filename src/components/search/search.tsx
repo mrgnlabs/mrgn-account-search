@@ -1,151 +1,148 @@
-"use client";
+'use client'
 
-import { useRouter } from "next/navigation";
-import React from "react";
+import { useRouter } from 'next/navigation'
+import React from 'react'
 
-import Image from "next/image";
+import Image from 'next/image'
 
-import { NameRegistryState, getDomainKeySync } from "@bonfida/spl-name-service";
-import { Connection, PublicKey } from "@solana/web3.js";
+import { NameRegistryState, getDomainKeySync } from '@bonfida/spl-name-service'
+import { Connection, PublicKey } from '@solana/web3.js'
 
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils'
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 
-const connection = new Connection(
-  process.env.NEXT_PUBLIC_RPC_URL!,
-  "confirmed"
-);
+const connection = new Connection(process.env.NEXT_PUBLIC_RPC_URL!, 'confirmed')
 
 type Balance = {
-  bankAddress: string;
-  mintAddress: string;
-  name: string;
-  symbol: string;
-  logo: string;
+  bankAddress: string
+  mintAddress: string
+  name: string
+  symbol: string
+  logo: string
   assets: {
-    quantity: number;
-    usd: number;
-  };
+    quantity: number
+    usd: number
+  }
   liabilities: {
-    quantity: number;
-    usd: number;
-  };
-};
+    quantity: number
+    usd: number
+  }
+}
 
 type Account = {
-  assets: number;
-  liabilities: number;
-  address: string;
-  healthFactor: number;
+  assets: number
+  liabilities: number
+  address: string
+  healthFactor: number
   balances: {
-    lending: Balance[];
-    borrowing: Balance[];
-  };
-};
+    lending: Balance[]
+    borrowing: Balance[]
+  }
+}
 
 type SearchProps = {
-  address?: string;
-};
+  address?: string
+}
 
 export const Search: React.FC<SearchProps> = ({ address }) => {
-  const router = useRouter();
+  const router = useRouter()
 
-  const [accounts, setAccounts] = React.useState<Account[]>();
-  const [isSearching, setIsSearching] = React.useState(false);
-  const [errorMsg, setErrorMsg] = React.useState<string>("");
+  const [accounts, setAccounts] = React.useState<Account[]>()
+  const [isSearching, setIsSearching] = React.useState(false)
+  const [errorMsg, setErrorMsg] = React.useState<string>('')
 
-  const usDollarFormatter = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  });
+  const usDollarFormatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  })
 
   const searchAccounts = async (address: string) => {
-    setErrorMsg("");
-    setIsSearching(true);
-    setAccounts([]);
+    setErrorMsg('')
+    setIsSearching(true)
+    setAccounts([])
 
-    let pk: PublicKey;
+    let pk: PublicKey
 
     if (!address) {
-      console.log("No address provided");
-      return;
+      console.log('No address provided')
+      return
     }
 
-    const addressString = address.toString();
-    if (addressString.endsWith(".sol")) {
+    const addressString = address.toString()
+    if (addressString.endsWith('.sol')) {
       try {
-        const { pubkey } = await getDomainKeySync(addressString);
+        const { pubkey } = await getDomainKeySync(addressString)
         const { registry } = await NameRegistryState.retrieve(
           connection,
           pubkey
-        );
+        )
 
-        pk = registry.owner;
+        pk = registry.owner
       } catch (e) {
-        setErrorMsg("Invalid domain name provided");
-        return;
+        setErrorMsg('Invalid domain name provided')
+        return
       }
     } else {
       try {
-        pk = new PublicKey(addressString);
+        pk = new PublicKey(addressString)
       } catch (e) {
-        setErrorMsg("Invalid address provided");
-        setIsSearching(false);
-        setAccounts([]);
-        return;
+        setErrorMsg('Invalid address provided')
+        setIsSearching(false)
+        setAccounts([])
+        return
       }
     }
 
     const res = await fetch(`/api/search?address=${pk.toString()}`, {
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
-    });
+    })
 
     if (!res.ok) {
-      setErrorMsg("Error searching for account");
-      setIsSearching(false);
-      setAccounts([]);
-      return;
+      setErrorMsg('Error searching for account')
+      setIsSearching(false)
+      setAccounts([])
+      return
     }
 
-    const { accounts } = await res.json();
+    const { accounts } = await res.json()
 
     if (!accounts) {
-      setErrorMsg("No accounts found");
-      setIsSearching(false);
-      setAccounts([]);
-      return;
+      setErrorMsg('No accounts found')
+      setIsSearching(false)
+      setAccounts([])
+      return
     }
 
-    setErrorMsg("");
-    setIsSearching(false);
-    setAccounts(accounts);
-  };
+    setErrorMsg('')
+    setIsSearching(false)
+    setAccounts(accounts)
+  }
 
   React.useEffect(() => {
     if (address) {
-      searchAccounts(address);
+      searchAccounts(address)
     }
-  }, [address]);
+  }, [address])
 
   return (
     <div className="w-full max-w-4xl">
       <form
         className="w-full max-w-2xl mx-auto mb-4"
         onSubmit={(e) => {
-          e.preventDefault();
-          const formData = new FormData(e.currentTarget);
-          const address = formData.get("address");
+          e.preventDefault()
+          const formData = new FormData(e.currentTarget)
+          const address = formData.get('address')
           if (!address) {
-            console.log("No address provided");
-            return;
+            console.log('No address provided')
+            return
           }
 
-          router.push(address.toString());
+          router.push(address.toString())
         }}
       >
         <div className="flex flex-col md:flex-row items-center justify-center w-full gap-2">
@@ -175,19 +172,19 @@ export const Search: React.FC<SearchProps> = ({ address }) => {
       {accounts && accounts.length > 0 && (
         <div>
           <p className="text-center italic text-sm mb-4">
-            {accounts.length} account{accounts.length > 1 && "s"} found
+            {accounts.length} account{accounts.length > 1 && 's'} found
           </p>
 
           {accounts.map((account, index) => (
             <div
               key={index}
               className={cn(
-                "border-border pb-4 mb-4 mt-8",
+                'border-border pb-4 mb-4 mt-8',
                 index < account.balances.lending.length - 1
               )}
             >
               <h3 className="md:text-lg font-medium mb-8 text-center">
-                Account:{" "}
+                Account:{' '}
                 <span className="font-mono text-xs md:text-base">
                   {account.address}
                 </span>
@@ -276,5 +273,5 @@ export const Search: React.FC<SearchProps> = ({ address }) => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
