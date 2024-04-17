@@ -623,10 +623,10 @@
     rpc-websockets "^7.5.1"
     superstruct "^0.14.2"
 
-"@solana/web3.js@^1.32.0", "@solana/web3.js@^1.68.0", "@solana/web3.js@^1.71.0", "@solana/web3.js@^1.87.6":
-  version "1.87.6"
-  resolved "https://registry.yarnpkg.com/@solana/web3.js/-/web3.js-1.87.6.tgz#6744cfc5f4fc81e0f58241c0a92648a7320bb3bf"
-  integrity sha512-LkqsEBgTZztFiccZZXnawWa8qNCATEqE97/d0vIwjTclmVlc8pBpD1DmjfVHtZ1HS5fZorFlVhXfpwnCNDZfyg==
+"@solana/web3.js@^1.32.0", "@solana/web3.js@^1.68.0", "@solana/web3.js@^1.71.0", "@solana/web3.js@^1.87.7":
+  version "1.87.7"
+  resolved "https://registry.yarnpkg.com/@solana/web3.js/-/web3.js-1.87.7.tgz#26ebdfcc8caaaa34aa44290c2a8a8588abc5c337"
+  integrity sha512-GxebSfR/Z69SgiJJv0hQgh7gt/ojZIrPVDSF79XnruyCTKj7XMGtJKu9tRblHbhICoVHBPZftfTlgMT6lCpEwg==
   dependencies:
     "@babel/runtime" "^7.23.2"
     "@noble/curves" "^1.2.0"
