@@ -8,11 +8,12 @@ import Image from 'next/image'
 import { NameRegistryState, getDomainKeySync } from '@bonfida/spl-name-service'
 import { Connection, PublicKey } from '@solana/web3.js'
 
-import { cn } from '@/lib/utils'
+import { cn, shortenAddress } from '@/lib/utils'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
+import Link from 'next/link'
 
 const connection = new Connection(process.env.NEXT_PUBLIC_RPC_URL!, 'confirmed')
 
@@ -211,7 +212,17 @@ export const Search: React.FC<SearchProps> = ({ address }) => {
                               unoptimized
                               className="rounded-full"
                             />
-                            {balance.name}
+                            <div className="space-y-1">
+                              {balance.name}
+                              <Link
+                                href={`https://solscan.io/address/${balance.bankAddress}`}
+                                className="text-xs block text-primary border-b transition-colors hover:border-transparent"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                {shortenAddress(balance.bankAddress)}
+                              </Link>
+                            </div>
                           </h5>
                           <ul className="text-sm font-mono space-y-1">
                             <li>
