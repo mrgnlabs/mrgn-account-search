@@ -184,12 +184,27 @@ export const Search: React.FC<SearchProps> = ({ address }) => {
                 index < account.balances.lending.length - 1
               )}
             >
-              <h3 className="md:text-lg font-medium mb-8 text-center">
-                Account:{' '}
-                <span className="font-mono text-xs md:text-base">
-                  {account.address}
-                </span>
-              </h3>
+              <header className="space-y-2 mb-8">
+                <h3 className="md:text-lg font-medium text-center">
+                  Account:{' '}
+                  <span className="font-mono text-xs text-muted-foreground md:text-base">
+                    {account.address}
+                  </span>
+                </h3>
+
+                <h3 className="md:text-lg font-medium text-center">
+                  Health Factor:{' '}
+                  <span
+                    className={cn(
+                      'font-mono text-xs md:text-base text-error',
+                      account.healthFactor > 10 && 'text-warning',
+                      account.healthFactor >= 50 && 'text-success'
+                    )}
+                  >
+                    {account.healthFactor}%
+                  </span>
+                </h3>
+              </header>
 
               <div className="flex flex-col md:flex-row gap-8 md:gap-4 justify-center">
                 <div className="w-full">
