@@ -259,6 +259,17 @@ export const Search: React.FC<SearchProps> = ({ address }) => {
                               unoptimized
                               className="rounded-full"
                             />
+                            <div className="space-y-1">
+                              {balance.name}
+                              <Link
+                                href={`https://solscan.io/address/${balance.bankAddress}`}
+                                className="text-xs block text-primary border-b transition-colors hover:border-transparent"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                {shortenAddress(balance.bankAddress)}
+                              </Link>
+                            </div>
                             {balance.name}
                           </h5>
                           <ul className="text-sm font-mono space-y-1">
