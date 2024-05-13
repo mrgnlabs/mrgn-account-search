@@ -231,7 +231,7 @@ export const Search: React.FC<SearchProps> = ({ address }) => {
                               {balance.name}
                               <Link
                                 href={`https://solscan.io/address/${balance.bankAddress}`}
-                                className="text-xs block text-primary border-b transition-colors hover:border-transparent"
+                                className="text-xs block max-w-fit text-primary border-b transition-colors hover:border-transparent"
                                 target="_blank"
                                 rel="noopener noreferrer"
                               >
@@ -278,14 +278,13 @@ export const Search: React.FC<SearchProps> = ({ address }) => {
                               {balance.name}
                               <Link
                                 href={`https://solscan.io/address/${balance.bankAddress}`}
-                                className="text-xs block text-primary border-b transition-colors hover:border-transparent"
+                                className="text-xs block max-w-fit text-primary border-b transition-colors hover:border-transparent"
                                 target="_blank"
                                 rel="noopener noreferrer"
                               >
                                 {shortenAddress(balance.bankAddress)}
                               </Link>
                             </div>
-                            {balance.name}
                           </h5>
                           <ul className="text-sm font-mono space-y-1">
                             <li>
