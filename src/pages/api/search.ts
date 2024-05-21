@@ -7,7 +7,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const connection = new Connection(
-    'https://mrgn.rpcpool.com/c293bade994b3864b52c6bbbba4b',
+    process.env.NEXT_PUBLIC_RPC_URL!,
     'confirmed'
   )
 
