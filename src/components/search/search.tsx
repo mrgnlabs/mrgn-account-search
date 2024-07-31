@@ -1,9 +1,10 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import React from 'react'
 
+import Link from 'next/link'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 
 import { NameRegistryState, getDomainKeySync } from '@bonfida/spl-name-service'
 import { Connection, PublicKey } from '@solana/web3.js'
@@ -13,7 +14,12 @@ import { cn, shortenAddress } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import Link from 'next/link'
+import {
+  TooltipProvider,
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from '@/components/ui/tooltip'
 
 const connection = new Connection(process.env.NEXT_PUBLIC_RPC_URL!, 'confirmed')
 
@@ -188,15 +194,40 @@ export const Search: React.FC<SearchProps> = ({ address }) => {
               <header className="space-y-2 mb-8">
                 <h2 className="md:text-lg font-medium text-center">
                   Group:{' '}
-                  <span className="font-mono text-xs text-muted-foreground md:text-base">
-                    {account.group}
-                  </span>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <Link
+                          href={`https://solscan.io/address/${account.group}`}
+                          className="font-mono text-xs text-muted-foreground md:text-base"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {shortenAddress(account.group)}
+                        </Link>
+                      </TooltipTrigger>
+                      <TooltipContent>{account.group}</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </h2>
+
                 <h3 className="md:text-lg font-medium text-center">
                   Account:{' '}
-                  <span className="font-mono text-xs text-muted-foreground md:text-base">
-                    {account.address}
-                  </span>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <Link
+                          href={`https://solscan.io/address/${account.address}`}
+                          className="font-mono text-xs text-muted-foreground md:text-base"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {shortenAddress(account.address)}
+                        </Link>
+                      </TooltipTrigger>
+                      <TooltipContent>{account.address}</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </h3>
 
                 <h4 className="md:text-lg font-medium text-center">
