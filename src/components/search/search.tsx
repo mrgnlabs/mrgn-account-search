@@ -41,6 +41,10 @@ type Balance = {
 
 type Account = {
   group: string
+  groupMeta: {
+    symbol: string
+    logo: string
+  }
   assets: number
   liabilities: number
   address: string
@@ -192,6 +196,21 @@ export const Search: React.FC<SearchProps> = ({ address }) => {
               )}
             >
               <header className="space-y-2 mb-8">
+                {account.groupMeta.symbol && (
+                  <div className="flex items-center justify-center gap-2">
+                    <img
+                      src={account.groupMeta.logo}
+                      alt={account.groupMeta.symbol}
+                      width={48}
+                      height={48}
+                      className="rounded-full"
+                    />
+                    <span className="text-lg font-medium">
+                      {account.groupMeta.symbol}
+                    </span>
+                  </div>
+                )}
+
                 <h2 className="md:text-lg font-medium text-center">
                   Group:{' '}
                   <TooltipProvider>

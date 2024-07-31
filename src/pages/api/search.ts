@@ -4,6 +4,10 @@ import { MarginfiClient, getConfig } from '@mrgnlabs/marginfi-client-v2'
 
 type Account = {
   group: string
+  groupMeta: {
+    symbol: string
+    logo: string
+  }
   assets: number
   liabilities: number
   address: string
@@ -13,6 +17,8 @@ type Account = {
     borrowing: any[]
   }
 }
+
+const USDC_MINT = new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v')
 
 export default async function handler(
   req: NextApiRequest,
@@ -135,8 +141,18 @@ export default async function handler(
         (balance) => balance.liabilities.quantity > 0
       )
 
+      // each group has two banks (USDC + a token)
+      // store the token in variable
+      const token = balances.find(
+        (balance) => balance.mintAddress !== USDC_MINT.toBase58()
+      )
+
       return {
-        group, // Include the group key
+        group,
+        groupMeta: {
+          symbol: token?.symbol,
+          logo: `https://storage.googleapis.com/mrgn-public/mrgn-trade-token-icons/${token?.mintAddress}.png`,
+        },
         assets: assets.toNumber(),
         liabilities: liabilities.toNumber(),
         address: account.address.toBase58(),
