@@ -34,6 +34,7 @@ type Balance = {
 }
 
 type Account = {
+  group: string
   assets: number
   liabilities: number
   address: string
@@ -180,11 +181,17 @@ export const Search: React.FC<SearchProps> = ({ address }) => {
             <div
               key={index}
               className={cn(
-                'border-border pb-4 mb-4 mt-8',
+                'border-border pb-4 mb-8 mt-16',
                 index < account.balances.lending.length - 1
               )}
             >
               <header className="space-y-2 mb-8">
+                <h2 className="md:text-lg font-medium text-center">
+                  Group:{' '}
+                  <span className="font-mono text-xs text-muted-foreground md:text-base">
+                    {account.group}
+                  </span>
+                </h2>
                 <h3 className="md:text-lg font-medium text-center">
                   Account:{' '}
                   <span className="font-mono text-xs text-muted-foreground md:text-base">
@@ -192,7 +199,7 @@ export const Search: React.FC<SearchProps> = ({ address }) => {
                   </span>
                 </h3>
 
-                <h3 className="md:text-lg font-medium text-center">
+                <h4 className="md:text-lg font-medium text-center">
                   Health Factor:{' '}
                   <span
                     className={cn(
@@ -203,7 +210,7 @@ export const Search: React.FC<SearchProps> = ({ address }) => {
                   >
                     {account.healthFactor}%
                   </span>
-                </h3>
+                </h4>
               </header>
 
               <div className="flex flex-col md:flex-row gap-8 md:gap-4 justify-center">
