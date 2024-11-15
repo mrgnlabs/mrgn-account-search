@@ -1,15 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { Connection, PublicKey } from '@solana/web3.js'
 import { getConfig, MarginfiClient } from '@mrgnlabs/marginfi-client-v2'
+import { generateEndpoint } from '@/lib/utils'
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const connection = new Connection(
-    process.env.NEXT_PUBLIC_RPC_URL!,
-    'confirmed'
+  const rpcEndpoint = await generateEndpoint(
+    process.env.NEXT_PUBLIC_MARGINFI_RPC_ENDPOINT_OVERRIDE || ''
   )
+
+  const connection = new Connection(rpcEndpoint, 'confirmed')
 
   const address = req.query.address
   let pk: PublicKey

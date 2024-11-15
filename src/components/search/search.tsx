@@ -8,14 +8,12 @@ import Image from 'next/image'
 import { NameRegistryState, getDomainKeySync } from '@bonfida/spl-name-service'
 import { Connection, PublicKey } from '@solana/web3.js'
 
-import { cn, shortenAddress } from '@/lib/utils'
+import { cn, shortenAddress, generateEndpoint } from '@/lib/utils'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import Link from 'next/link'
-
-const connection = new Connection(process.env.NEXT_PUBLIC_RPC_URL!, 'confirmed')
 
 type Balance = {
   bankAddress: string
@@ -65,6 +63,12 @@ export const Search: React.FC<SearchProps> = ({ address }) => {
     setIsSearching(true)
     setAccounts([])
 
+    const rpcEndpoint = await generateEndpoint(
+      process.env.NEXT_PUBLIC_MARGINFI_RPC_ENDPOINT_OVERRIDE || ''
+    )
+
+    const connection = new Connection(rpcEndpoint, 'confirmed')
+
     let pk: PublicKey
 
     if (!address) {
@@ -97,11 +101,7 @@ export const Search: React.FC<SearchProps> = ({ address }) => {
       }
     }
 
-    const res = await fetch(`/api/search?address=${pk.toString()}`, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
+    const res = await fetch(`/api/search?address=${pk.toString()}`)
 
     if (!res.ok) {
       setErrorMsg('Error searching for account')
