@@ -80,7 +80,7 @@ export default async function handler(
         mintAddress: bank.mint.toBase58(),
         name: tokenMetadata?.name,
         symbol: tokenMetadata?.symbol,
-        logo: tokenMetadata?.logoURI,
+        logo: `https://storage.googleapis.com/mrgn-public/mrgn-token-icons/${bank.mint.toBase58()}.png`,
         assets: {
           quantity: !assetsUsd.isZero() ? assets.toNumber() : 0,
           usd: assetsUsd.toNumber(),
