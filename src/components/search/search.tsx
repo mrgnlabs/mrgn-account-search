@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation'
 import { NameRegistryState, getDomainKeySync } from '@bonfida/spl-name-service'
 import { Connection, PublicKey } from '@solana/web3.js'
 
-import { cn, shortenAddress } from '@/lib/utils'
+import { cn, generateEndpoint, shortenAddress } from '@/lib/utils'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -20,8 +20,6 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from '@/components/ui/tooltip'
-
-const connection = new Connection(process.env.NEXT_PUBLIC_RPC_URL!, 'confirmed')
 
 type Balance = {
   bankAddress: string
@@ -76,6 +74,10 @@ export const Search: React.FC<SearchProps> = ({ address }) => {
     setIsSearching(true)
     setAccounts([])
 
+    const rpcEndpoint = await generateEndpoint(
+      process.env.NEXT_PUBLIC_MARGINFI_RPC_ENDPOINT_OVERRIDE ?? ''
+    )
+    const connection = new Connection(rpcEndpoint, 'confirmed')
     let pk: PublicKey
 
     if (!address) {

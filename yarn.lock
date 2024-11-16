@@ -259,7 +259,7 @@
   resolved "https://registry.yarnpkg.com/@js-sdsl/ordered-map/-/ordered-map-4.4.2.tgz#9299f82874bab9e4c7f9c48d865becbfe8d6907c"
   integrity sha512-iUKgm52T8HOE/makSxjqoWhe95ZJA1/G1sYsGev2JDKUSS14KAgg1LHb+Ba+IPow0xflbnSkOsZcO08C7w1gYw==
 
-"@mrgnlabs/marginfi-client-v2@^34.0.0":
+"@mrgnlabs/marginfi-client-v2@^4.0.0":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@mrgnlabs/marginfi-client-v2/-/marginfi-client-v2-4.0.0.tgz#50676767dc9a06b5ffaccb25f3dc8f7a24b6f52d"
   integrity sha512-GnXdGdPgU54w517iDXfKoti1i8jrVyOwhxPKS2Lpqac3QH4NL3b4sSbz+pCBDmjk60gveHzu3IAIGscUpbo1yQ==

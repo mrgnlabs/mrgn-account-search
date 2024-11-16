@@ -25,7 +25,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const connection = new Connection(
-    process.env.NEXT_PUBLIC_RPC_URL!,
+    process.env.PRIVATE_RPC_ENDPOINT_OVERRIDE ?? '',
     'confirmed'
   )
 
