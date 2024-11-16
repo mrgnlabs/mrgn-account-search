@@ -1,3 +1,5 @@
+export const maxDuration = 30
+
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { Connection, PublicKey } from '@solana/web3.js'
 import { MarginfiClient, getConfig } from '@mrgnlabs/marginfi-client-v2'
