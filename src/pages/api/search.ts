@@ -7,10 +7,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const rpcEndpoint = await generateEndpoint(
-    process.env.PRIVATE_RPC_ENDPOINT_OVERRIDE || ''
-  )
-
+  const rpcEndpoint = process.env.PRIVATE_RPC_ENDPOINT_OVERRIDE ?? ''
   const connection = new Connection(rpcEndpoint, 'confirmed')
 
   const address = req.query.address
