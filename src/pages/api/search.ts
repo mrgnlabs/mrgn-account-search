@@ -8,7 +8,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const rpcEndpoint = await generateEndpoint(
-    process.env.NEXT_PUBLIC_MARGINFI_RPC_ENDPOINT_OVERRIDE || ''
+    process.env.PRIVATE_RPC_ENDPOINT_OVERRIDE || ''
   )
 
   const connection = new Connection(rpcEndpoint, 'confirmed')
