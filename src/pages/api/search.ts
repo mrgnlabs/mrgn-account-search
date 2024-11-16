@@ -151,7 +151,7 @@ export default async function handler(
         group,
         groupMeta: {
           symbol: token?.symbol,
-          logo: `https://storage.googleapis.com/mrgn-public/mrgn-trade-token-icons/${token?.mintAddress}.png`,
+          logo: `https://storage.googleapis.com/mrgn-public/mrgn-token-icons/${token?.mintAddress}.png`,
         },
         assets: assets.toNumber(),
         liabilities: liabilities.toNumber(),
