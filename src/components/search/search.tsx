@@ -75,7 +75,8 @@ export const Search: React.FC<SearchProps> = ({ address }) => {
     setAccounts([])
 
     const rpcEndpoint = await generateEndpoint(
-      process.env.NEXT_PUBLIC_MARGINFI_RPC_ENDPOINT_OVERRIDE ?? ''
+      process.env.NEXT_PUBLIC_MARGINFI_RPC_ENDPOINT_OVERRIDE ?? '',
+      process.env.NEXT_PUBLIC_RPC_PROXY_KEY ?? ''
     )
     const connection = new Connection(rpcEndpoint, 'confirmed')
     let pk: PublicKey
