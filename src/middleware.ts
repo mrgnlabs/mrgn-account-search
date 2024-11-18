@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { generateEndpoint } from '@/lib/utils'
 
 const allowedOrigins = [
-  'https://account-search.marginfi.com',
+  'https://mrgn-risk-dashboard.vercel.app',
   'http://localhost:3000',
 ]
 
